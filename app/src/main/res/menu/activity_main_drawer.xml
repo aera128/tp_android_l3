@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_accueil"
+            android:icon="@drawable/ic_menu_home"
+            android:title="Accueil" />
+        <item
+            android:id="@+id/nav_hasard"
+            android:icon="@drawable/ic_menu_random"
+            android:title="Annonce au hasard" />
+        <item
+            android:id="@+id/nav_liste"
+            android:icon="@drawable/ic_menu_list"
+            android:title="Lister les biens" />
+    </group>
+
+    <item android:title="Utilisateur">
+        <menu>
+            <item
+                android:id="@+id/nav_depot"
+                android:icon="@drawable/ic_menu_depot"
+                android:title="Déposer un bien" />
+            <item
+                android:id="@+id/nav_saved"
+                android:icon="@drawable/ic_menu_list"
+                android:title="Biens sauvegardés" />
+        </menu>
+    </item>
+
+</menu>
