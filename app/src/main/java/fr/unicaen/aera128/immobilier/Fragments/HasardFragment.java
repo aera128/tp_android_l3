@@ -8,16 +8,15 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
@@ -28,6 +27,7 @@ import java.util.Date;
 import fr.unicaen.aera128.immobilier.DB.AnnonceDataSource;
 import fr.unicaen.aera128.immobilier.Models.Propriete;
 import fr.unicaen.aera128.immobilier.R;
+import fr.unicaen.aera128.immobilier.Utils.ViewPagerAdapter;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -182,8 +182,9 @@ public class HasardFragment extends Fragment {
         TextView titre = getActivity().findViewById(R.id.titleVisio);
         titre.setText(propriete.getTitre());
 
-        ImageView imageMaison = getActivity().findViewById(R.id.imgVisio);
-        Picasso.get().load(propriete.getImages()[0]).resize(1000, 800).into(imageMaison);
+        ViewPager viewPager = getActivity().findViewById(R.id.carousel);
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getContext(), propriete.getImages());
+        viewPager.setAdapter(adapter);
 
         TextView prix = getActivity().findViewById(R.id.prixVisio);
         prix.setText(propriete.getPrix() + " €");
