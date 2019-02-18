@@ -1,7 +1,5 @@
 package fr.unicaen.aera128.immobilier.Fragments;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,7 +13,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
@@ -96,7 +93,9 @@ public class MainFragment extends Fragment {
                 HasardFragment fr = HasardFragment.newInstance(item, false);
                 FragmentManager fm = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fm.beginTransaction();
+                fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
                 fragmentTransaction.replace(R.id.frame_main, fr);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         });

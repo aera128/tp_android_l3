@@ -1,8 +1,6 @@
 package fr.unicaen.aera128.immobilier.Fragments;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,11 +113,8 @@ public class HasardFragment extends Fragment {
                     if (annonceDB.deletePropriete(propriete)) {
                         Toast toast = Toast.makeText(getContext(), "Annonce supprimée", Toast.LENGTH_SHORT);
                         toast.show();
-                        SavedFragment fr = SavedFragment.newInstance();
                         FragmentManager fm = getFragmentManager();
-                        FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                        fragmentTransaction.replace(R.id.frame_main, fr);
-                        fragmentTransaction.commit();
+                        fm.popBackStack();
                     } else {
                         Toast toast = Toast.makeText(getContext(), "Annonce non supprimée", Toast.LENGTH_SHORT);
                         toast.show();

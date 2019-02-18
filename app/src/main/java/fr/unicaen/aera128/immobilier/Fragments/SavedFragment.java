@@ -88,7 +88,9 @@ public class SavedFragment extends Fragment {
                 HasardFragment fr = HasardFragment.newInstance(item, true);
                 FragmentManager fm = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fm.beginTransaction();
+                fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
                 fragmentTransaction.replace(R.id.frame_main, fr);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         });
