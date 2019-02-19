@@ -1,18 +1,19 @@
 package fr.unicaen.aera128.immobilier.Models;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Propriete implements Serializable {
     private String id;
     private String titre;
     private String description;
     private int nbPieces;
-    private String[] caracteristiques;
+    private List<String> caracteristiques;
     private int prix;
     private String ville;
     private String codePostal;
     private Vendeur vendeur;
-    private String[] images;
+    private List<String> images;
     private long date;
 
     public String getId() {
@@ -47,11 +48,11 @@ public class Propriete implements Serializable {
         this.nbPieces = nbPieces;
     }
 
-    public String[] getCaracteristiques() {
+    public List<String> getCaracteristiques() {
         return caracteristiques;
     }
 
-    public void setCaracteristiques(String[] caracteristiques) {
+    public void setCaracteristiques(List<String> caracteristiques) {
         this.caracteristiques = caracteristiques;
     }
 
@@ -87,11 +88,11 @@ public class Propriete implements Serializable {
         this.vendeur = vendeur;
     }
 
-    public String[] getImages() {
+    public List<String> getImages() {
         return images;
     }
 
-    public void setImages(String[] images) {
+    public void setImages(List<String> images) {
         this.images = images;
     }
 
@@ -99,7 +100,7 @@ public class Propriete implements Serializable {
         return date;
     }
 
-    public void setDate(int date) {
+    public void setDate(long date) {
         this.date = date;
     }
 }

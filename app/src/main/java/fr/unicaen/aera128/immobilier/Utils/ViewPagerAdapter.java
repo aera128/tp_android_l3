@@ -1,6 +1,7 @@
 package fr.unicaen.aera128.immobilier.Utils;
 
 import android.content.Context;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
@@ -9,18 +10,22 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.util.List;
+
 public class ViewPagerAdapter extends PagerAdapter {
     private Context context;
-    private String[] imgUrls;
+    private List<String> imgUrls;
 
-    public ViewPagerAdapter(Context context, String[] imgUrls) {
+    public ViewPagerAdapter(Context context, List<String> imgUrls) {
         this.context = context;
         this.imgUrls = imgUrls;
     }
 
     @Override
     public int getCount() {
-        return imgUrls.length;
+        return imgUrls.size();
+
     }
 
     @Override
@@ -32,7 +37,11 @@ public class ViewPagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         ImageView imageView = new ImageView(context);
-        Picasso.get().load(imgUrls[position]).resize(1000, 800).centerCrop().into(imageView);
+        if (imgUrls.get(position).contains(Environment.getExternalStorageDirectory().toString())) {
+            Picasso.get().load(new File(imgUrls.get(position))).rotate(-90).resize(1000, 800).centerCrop().into(imageView);
+        } else {
+            Picasso.get().load(imgUrls.get(position)).resize(1000, 800).centerCrop().into(imageView);
+        }
         container.addView(imageView);
         return imageView;
     }

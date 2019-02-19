@@ -198,7 +198,6 @@ public class HasardFragment extends Fragment {
         TextView dateView = getActivity().findViewById(R.id.dateVisio);
         Timestamp ts = new Timestamp(propriete.getDate());
         Date date = ts;
-        System.out.println(date);
         dateView.setText(date.toString());
 
         TextView nomVendeur = getActivity().findViewById(R.id.nomVendeur);

@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showDepotFragment() {
-        if (this.fragmentDepot == null) this.fragmentDepot = DepotFragment.newInstance(null, null);
+        if (this.fragmentDepot == null) this.fragmentDepot = DepotFragment.newInstance();
         this.startTransactionFragment(this.fragmentDepot);
     }
 

@@ -7,7 +7,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import fr.unicaen.aera128.immobilier.Models.Propriete;
@@ -85,7 +86,7 @@ public class AnnonceDataSource {
 
     }
 
-    public void insertVendeur(Vendeur vendeur) {
+    public boolean insertVendeur(Vendeur vendeur) {
         Cursor c = database.rawQuery("SELECT * FROM " + AnnonceSQLiteHelper.TABLE_VENDEURS + " WHERE " + AnnonceSQLiteHelper.COLUMN_ID + "=\"" + vendeur.getId() + "\"", null);
         if (c.getCount() == 0) {
             ContentValues values = new ContentValues();
@@ -97,13 +98,15 @@ public class AnnonceDataSource {
 
             database.insert(AnnonceSQLiteHelper.TABLE_VENDEURS, null, values);
             Log.w(AnnonceDataSource.class.getName(), "Vendeur inséré");
+            return true;
         } else {
             Log.w(AnnonceDataSource.class.getName(), "Vendeur déja existant");
+            return false;
         }
     }
 
-    public List<Propriete> getAll() {
-        List<Propriete> proprietes = new LinkedList<Propriete>();
+    public ArrayList<Propriete> getAll() {
+        ArrayList<Propriete> proprietes = new ArrayList<Propriete>();
 
         String query = "SELECT  * FROM " + AnnonceSQLiteHelper.TABLE_PROPRIETES;
 
@@ -146,6 +149,26 @@ public class AnnonceDataSource {
         return proprietes;
     }
 
+    public ArrayList<Vendeur> getAllVendeur() {
+        ArrayList<Vendeur> vendeurs = new ArrayList<Vendeur>();
+
+        String q = "SELECT  * FROM " + AnnonceSQLiteHelper.TABLE_VENDEURS;
+
+        Cursor c = database.rawQuery(q, null);
+        if (c.moveToFirst()) {
+            do {
+                Vendeur vendeur = new Vendeur();
+                vendeur.setId(c.getString(0));
+                vendeur.setNom(c.getString(1));
+                vendeur.setPrenom(c.getString(2));
+                vendeur.setEmail(c.getString(3));
+                vendeur.setTelephone(c.getString(4));
+                vendeurs.add(vendeur);
+            } while (c.moveToNext());
+        }
+        return vendeurs;
+    }
+
     public boolean deletePropriete(Propriete propriete) {
         String id = propriete.getId();
         System.out.println("Propriete deleted with id: " + id);
@@ -168,21 +191,21 @@ public class AnnonceDataSource {
                 + " = " + id, null);
     }
 
-    private String convertArrayToString(String[] array) {
+    private String convertArrayToString(List<String> array) {
         String strSeparator = "__,__";
         String str = "";
-        for (int i = 0; i < array.length; i++) {
-            str = str + array[i];
-            if (i < array.length - 1) {
+        for (int i = 0; i < array.size(); i++) {
+            str = str + array.get(i);
+            if (i < array.size() - 1) {
                 str = str + strSeparator;
             }
         }
         return str;
     }
 
-    private String[] convertStringToArray(String str) {
+    private List<String> convertStringToArray(String str) {
         String strSeparator = "__,__";
         String[] arr = str.split(strSeparator);
-        return arr;
+        return Arrays.asList(arr);
     }
 }

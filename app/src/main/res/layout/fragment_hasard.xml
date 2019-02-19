@@ -28,7 +28,8 @@
                     android:id="@+id/titleVisio"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/DarkSlateGray"
+                    android:background="@color/SlateGray"
+                    android:gravity="center"
                     android:paddingTop="@dimen/nav_header_vertical_spacing"
                     android:text="Loading"
                     android:textAlignment="center"
@@ -67,7 +68,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/DimGray"
+                        android:background="@color/SlateGray"
                         android:text="Description"
                         android:textAlignment="center"
                         android:textAllCaps="false"
@@ -85,7 +86,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/DimGray"
+                        android:background="@color/SlateGray"
                         android:text="Ville"
                         android:textAlignment="center"
                         android:textAppearance="@android:style/TextAppearance.WindowTitle" />
@@ -101,7 +102,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/DimGray"
+                        android:background="@color/SlateGray"
                         android:text="Prix"
                         android:textAlignment="center"
                         android:textAppearance="@android:style/TextAppearance.WindowTitle" />
@@ -117,7 +118,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/DimGray"
+                        android:background="@color/SlateGray"
                         android:text="Vendeur"
                         android:textAlignment="center"
                         android:textAppearance="@android:style/TextAppearance.WindowTitle" />
@@ -160,7 +161,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/DimGray"
+                        android:background="@color/SlateGray"
                         android:text="Date de publication"
                         android:textAlignment="center"
                         android:textAppearance="@android:style/TextAppearance.WindowTitle" />
@@ -197,7 +198,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:clickable="true"
-            android:src="@android:drawable/ic_menu_save"
+            android:src="@drawable/ic_menu_save"
             android:tint="@color/White"
             app:backgroundTint="@color/DarkGreen"
             app:layout_constraintBottom_toBottomOf="parent"

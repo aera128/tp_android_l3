@@ -1,5 +1,6 @@
 package fr.unicaen.aera128.immobilier.Utils;
 
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.List;
 
 import fr.unicaen.aera128.immobilier.Models.Propriete;
@@ -60,7 +62,11 @@ public class ProprietesAdapter extends RecyclerView.Adapter<ProprietesAdapter.My
     public void onBindViewHolder(@NonNull MyViewHolder holder, int i) {
         Propriete propriete = proprietes.get(i);
         holder.bind(proprietes.get(i), listener);
-        Picasso.get().load(propriete.getImages()[0]).resize(200, 200).centerCrop().into(holder.image);
+        if (propriete.getImages().get(0).contains(Environment.getExternalStorageDirectory().toString())) {
+            Picasso.get().load(new File(propriete.getImages().get(0))).rotate(-90).resize(200, 200).centerCrop().into(holder.image);
+        } else {
+            Picasso.get().load(propriete.getImages().get(0)).resize(200, 200).centerCrop().into(holder.image);
+        }
         holder.titre.setText(propriete.getTitre());
         holder.ville.setText(propriete.getVille());
         holder.prix.setText(propriete.getPrix() + " €");
