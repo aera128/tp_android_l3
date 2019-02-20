@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,13 +18,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -33,6 +29,7 @@ import fr.unicaen.aera128.immobilier.DB.AnnonceDataSource;
 import fr.unicaen.aera128.immobilier.Models.Propriete;
 import fr.unicaen.aera128.immobilier.Models.Vendeur;
 import fr.unicaen.aera128.immobilier.R;
+import fr.unicaen.aera128.immobilier.Utils.Tool;
 import fr.unicaen.aera128.immobilier.Utils.ViewPagerAdapter;
 
 
@@ -94,6 +91,11 @@ public class DepotFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            DepotFragment fr = (DepotFragment) getFragmentManager().getFragment(savedInstanceState, "SaveDepot");
+            listPhoto = fr.getListPhoto();
+            listCaracteristiques = fr.getListCaracteristiques();
+        }
     }
 
     @Override
@@ -118,12 +120,20 @@ public class DepotFragment extends Fragment {
         editVille = getActivity().findViewById(R.id.editVille);
         editCodePostal = getActivity().findViewById(R.id.editCodePostal);
 
-        listPhoto = new ArrayList<String>();
+        if (listPhoto == null) {
+            listPhoto = new ArrayList<String>();
+        } else {
+            if (listPhoto.size() > 0) {
+                viewPager.setVisibility(View.VISIBLE);
+            }
+        }
         viewPager = getActivity().findViewById(R.id.carouselDepot);
         adapterPhoto = new ViewPagerAdapter(getContext(), listPhoto);
         viewPager.setAdapter(adapterPhoto);
 
-        listCaracteristiques = new ArrayList<String>();
+        if (listCaracteristiques == null) {
+            listCaracteristiques = new ArrayList<String>();
+        }
         adapter = new ArrayAdapter<String>(getContext(), R.layout.item_list, R.id.item_list_cara, listCaracteristiques);
         listView = getActivity().findViewById(R.id.listCara);
         listView.setAdapter(adapter);
@@ -134,8 +144,8 @@ public class DepotFragment extends Fragment {
                 if (!editCara.getText().toString().equals("")) {
                     listCaracteristiques.add(editCara.getText().toString());
                     editCara.setText("");
-                    setListViewHeightBasedOnChildren(listView);
                     adapter.notifyDataSetChanged();
+                    Tool.setListViewHeightBasedOnChildren(listView);
                 }
             }
         });
@@ -249,34 +259,13 @@ public class DepotFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    public static void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            // pre-condition
-            return;
-        }
-
-        int totalHeight = 0;
-        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-            totalHeight += listItem.getMeasuredHeight();
-        }
-
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        listView.setLayoutParams(params);
-        listView.requestLayout();
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Bundle extras = data.getExtras();
         try {
             Bitmap imgTmp = (Bitmap) extras.get("data");
-            listPhoto.add(SaveImage(imgTmp));
+            listPhoto.add(Tool.saveImage(imgTmp));
             if (listPhoto.size() > 0) {
                 viewPager.setVisibility(View.VISIBLE);
             }
@@ -285,26 +274,35 @@ public class DepotFragment extends Fragment {
         }
     }
 
-    private String SaveImage(Bitmap finalBitmap) {
-        String dir = "/TPImmobilier";
-        String root = Environment.getExternalStorageDirectory().toString();
-        File myDir = new File(root + dir);
-        myDir.mkdirs();
-        Random generator = new Random();
-        int n = 10000;
-        n = generator.nextInt(n);
-        String fname = "Image-" + n + ".jpg";
-        File file = new File(myDir, fname);
-        if (file.exists()) file.delete();
-        try {
-            FileOutputStream out = new FileOutputStream(file);
-            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-            out.flush();
-            out.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return root + dir + "/" + fname;
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        getFragmentManager().putFragment(outState, "SaveDepot", this);
     }
+
+    public ArrayList<String> getListCaracteristiques() {
+        return listCaracteristiques;
+    }
+
+    public ArrayList<String> getListPhoto() {
+        return listPhoto;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (listPhoto != null) {
+            if (listPhoto.size() > 0) {
+                viewPager.setVisibility(View.VISIBLE);
+            }
+        }
+//        if (listCaracteristiques != null){
+//            if (listCaracteristiques.size() > 0){
+//                adapter.notifyDataSetChanged();
+//                setListViewHeightBasedOnChildren(listView);
+//            }
+//        }
+    }
+
+
 }

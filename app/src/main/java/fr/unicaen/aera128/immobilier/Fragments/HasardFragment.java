@@ -12,6 +12,8 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -121,8 +123,7 @@ public class HasardFragment extends Fragment {
                     }
                 }
             });
-        }
-        else {
+        } else {
             btnDel.setVisibility(View.GONE);
             btnSave.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -200,6 +201,7 @@ public class HasardFragment extends Fragment {
         Date date = ts;
         dateView.setText(date.toString());
 
+
         TextView nomVendeur = getActivity().findViewById(R.id.nomVendeur);
         nomVendeur.setText(propriete.getVendeur().getPrenom() + " " + propriete.getVendeur().getNom());
 
@@ -208,7 +210,12 @@ public class HasardFragment extends Fragment {
 
         TextView telVendeur = getActivity().findViewById(R.id.telVendeur);
         telVendeur.setText(propriete.getVendeur().getTelephone());
+
+        ArrayAdapter<String> adapterCara = new ArrayAdapter<String>(getContext(), R.layout.item_list, R.id.item_list_cara, propriete.getCaracteristiques());
+        ListView listView = getActivity().findViewById(R.id.listCaraVisio);
+        listView.setAdapter(adapterCara);
     }
+
 
     private void convert(String url) {
         OkHttpClient client = new OkHttpClient();

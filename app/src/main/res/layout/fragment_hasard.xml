@@ -103,6 +103,22 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/SlateGray"
+                        android:text="Code Postal"
+                        android:textAlignment="center"
+                        android:textAppearance="@android:style/TextAppearance.WindowTitle" />
+
+                    <TextView
+                        android:id="@+id/cpVisio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Loading"
+                        tools:layout_editor_absoluteX="13dp"
+                        tools:layout_editor_absoluteY="316dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/SlateGray"
                         android:text="Prix"
                         android:textAlignment="center"
                         android:textAppearance="@android:style/TextAppearance.WindowTitle" />
@@ -157,6 +173,19 @@
                         android:text="Loading"
                         tools:layout_editor_absoluteX="16dp"
                         tools:layout_editor_absoluteY="493dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/SlateGray"
+                        android:text="Caractéristiques"
+                        android:textAlignment="center"
+                        android:textAppearance="@android:style/TextAppearance.WindowTitle" />
+
+                    <ListView
+                        android:id="@+id/listCaraVisio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
 
                     <TextView
                         android:layout_width="match_parent"

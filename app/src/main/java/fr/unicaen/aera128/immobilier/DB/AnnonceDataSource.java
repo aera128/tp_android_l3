@@ -8,11 +8,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import fr.unicaen.aera128.immobilier.Models.Propriete;
 import fr.unicaen.aera128.immobilier.Models.Vendeur;
+import fr.unicaen.aera128.immobilier.Utils.Tool;
 
 public class AnnonceDataSource {
 
@@ -66,13 +65,13 @@ public class AnnonceDataSource {
             values.put(AnnonceSQLiteHelper.COLUMN_TITRE, propriete.getTitre());
             values.put(AnnonceSQLiteHelper.COLUMN_DESC, propriete.getDescription());
             values.put(AnnonceSQLiteHelper.COLUMN_NBPIECE, propriete.getNbPieces());
-            String caraTmp = convertArrayToString(propriete.getCaracteristiques());
+            String caraTmp = Tool.convertArrayToString(propriete.getCaracteristiques());
             values.put(AnnonceSQLiteHelper.COLUMN_CARAC, caraTmp);
             values.put(AnnonceSQLiteHelper.COLUMN_PRIX, propriete.getPrix());
             values.put(AnnonceSQLiteHelper.COLUMN_VILLE, propriete.getVille());
             values.put(AnnonceSQLiteHelper.COLUMN_CP, propriete.getCodePostal());
             values.put(AnnonceSQLiteHelper.COLUMN_VENDEUR, propriete.getVendeur().getId());
-            String imgTmp = convertArrayToString(propriete.getImages());
+            String imgTmp = Tool.convertArrayToString(propriete.getImages());
             values.put(AnnonceSQLiteHelper.COLUMN_IMAGES, imgTmp);
             values.put(AnnonceSQLiteHelper.COLUMN_DATE, propriete.getDate());
             database.insert(AnnonceSQLiteHelper.TABLE_PROPRIETES, null, values);
@@ -120,11 +119,11 @@ public class AnnonceDataSource {
                 propriete.setTitre(cursor.getString(2));
                 propriete.setDescription(cursor.getString(3));
                 propriete.setNbPieces(cursor.getInt(4));
-                propriete.setCaracteristiques(convertStringToArray(cursor.getString(5)));
+                propriete.setCaracteristiques(Tool.convertStringToArray(cursor.getString(5)));
                 propriete.setPrix(cursor.getInt(6));
                 propriete.setVille(cursor.getString(7));
                 propriete.setCodePostal(cursor.getString(8));
-                propriete.setImages(convertStringToArray(cursor.getString(10)));
+                propriete.setImages(Tool.convertStringToArray(cursor.getString(10)));
                 propriete.setDate(cursor.getInt(11));
 
                 Vendeur vendeur = new Vendeur();
@@ -191,21 +190,4 @@ public class AnnonceDataSource {
                 + " = " + id, null);
     }
 
-    private String convertArrayToString(List<String> array) {
-        String strSeparator = "__,__";
-        String str = "";
-        for (int i = 0; i < array.size(); i++) {
-            str = str + array.get(i);
-            if (i < array.size() - 1) {
-                str = str + strSeparator;
-            }
-        }
-        return str;
-    }
-
-    private List<String> convertStringToArray(String str) {
-        String strSeparator = "__,__";
-        String[] arr = str.split(strSeparator);
-        return Arrays.asList(arr);
-    }
 }
