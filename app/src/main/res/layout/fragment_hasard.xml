@@ -178,19 +178,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/SlateGray"
-                        android:text="Caractéristiques"
-                        android:textAlignment="center"
-                        android:textAppearance="@android:style/TextAppearance.WindowTitle" />
-
-                    <ListView
-                        android:id="@+id/listCaraVisio"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/SlateGray"
                         android:text="Date de publication"
                         android:textAlignment="center"
                         android:textAppearance="@android:style/TextAppearance.WindowTitle" />
@@ -202,7 +189,22 @@
                         android:text="Loading"
                         tools:layout_editor_absoluteX="16dp"
                         tools:layout_editor_absoluteY="383dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/SlateGray"
+                        android:text="Caractéristiques"
+                        android:textAlignment="center"
+                        android:textAppearance="@android:style/TextAppearance.WindowTitle" />
+
+                    <ListView
+                        android:id="@+id/listCaraVisio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
+
+                liner
             </android.support.constraint.ConstraintLayout>
         </ScrollView>
 

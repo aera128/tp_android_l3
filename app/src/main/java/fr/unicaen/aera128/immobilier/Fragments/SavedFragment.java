@@ -82,7 +82,7 @@ public class SavedFragment extends Fragment {
 
         recyclerView = (RecyclerView) getActivity().findViewById(R.id.listeSaved);
 
-        mAdapter = new ProprietesAdapter(proprietes, new OnItemClickListener() {
+        mAdapter = new ProprietesAdapter(proprietes, getContext(), new OnItemClickListener() {
             @Override
             public void onItemClick(Propriete item) {
                 HasardFragment fr = HasardFragment.newInstance(item, true);

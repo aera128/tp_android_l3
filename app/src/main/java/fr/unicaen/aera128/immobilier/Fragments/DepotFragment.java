@@ -265,7 +265,7 @@ public class DepotFragment extends Fragment {
         Bundle extras = data.getExtras();
         try {
             Bitmap imgTmp = (Bitmap) extras.get("data");
-            listPhoto.add(Tool.saveImage(imgTmp));
+            listPhoto.add(Tool.saveImage(imgTmp, getContext()));
             if (listPhoto.size() > 0) {
                 viewPager.setVisibility(View.VISIBLE);
             }

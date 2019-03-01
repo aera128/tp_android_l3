@@ -29,6 +29,7 @@ import java.util.Date;
 import fr.unicaen.aera128.immobilier.DB.AnnonceDataSource;
 import fr.unicaen.aera128.immobilier.Models.Propriete;
 import fr.unicaen.aera128.immobilier.R;
+import fr.unicaen.aera128.immobilier.Utils.Tool;
 import fr.unicaen.aera128.immobilier.Utils.ViewPagerAdapter;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -193,6 +194,9 @@ public class HasardFragment extends Fragment {
         TextView ville = getActivity().findViewById(R.id.villeVisio);
         ville.setText(propriete.getVille());
 
+        TextView codePostal = getActivity().findViewById(R.id.cpVisio);
+        codePostal.setText(propriete.getCodePostal());
+
         TextView type = getActivity().findViewById(R.id.descriptionVisio);
         type.setText(propriete.getDescription());
 
@@ -214,6 +218,7 @@ public class HasardFragment extends Fragment {
         ArrayAdapter<String> adapterCara = new ArrayAdapter<String>(getContext(), R.layout.item_list, R.id.item_list_cara, propriete.getCaracteristiques());
         ListView listView = getActivity().findViewById(R.id.listCaraVisio);
         listView.setAdapter(adapterCara);
+        Tool.setListViewHeightBasedOnChildren(listView);
     }
 
 

@@ -1,7 +1,6 @@
 package fr.unicaen.aera128.immobilier.Utils;
 
 import android.content.Context;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
@@ -37,8 +36,8 @@ public class ViewPagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         ImageView imageView = new ImageView(context);
-        if (imgUrls.get(position).contains(Environment.getExternalStorageDirectory().toString())) {
-            Picasso.get().load(new File(imgUrls.get(position))).rotate(-90).resize(1000, 800).centerCrop().into(imageView);
+        if (imgUrls.get(position).contains(context.getCacheDir().toString())) {
+            Picasso.get().load(new File(imgUrls.get(position))).resize(1000, 800).centerCrop().into(imageView);
         } else {
             Picasso.get().load(imgUrls.get(position)).resize(1000, 800).centerCrop().into(imageView);
         }

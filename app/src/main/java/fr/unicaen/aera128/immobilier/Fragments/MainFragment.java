@@ -87,7 +87,7 @@ public class MainFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = (RecyclerView) getActivity().findViewById(R.id.listeLast);
 
-        mAdapter = new ProprietesAdapter(proprietes, new OnItemClickListener() {
+        mAdapter = new ProprietesAdapter(proprietes, getContext(), new OnItemClickListener() {
             @Override
             public void onItemClick(Propriete item) {
                 HasardFragment fr = HasardFragment.newInstance(item, false);

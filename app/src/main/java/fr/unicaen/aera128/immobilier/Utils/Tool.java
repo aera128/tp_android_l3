@@ -1,7 +1,7 @@
 package fr.unicaen.aera128.immobilier.Utils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Environment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
@@ -27,22 +27,21 @@ public class Tool {
         }
 
         int totalHeight = 0;
-        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.EXACTLY);
         for (int i = 0; i < listAdapter.getCount(); i++) {
             View listItem = listAdapter.getView(i, null, listView);
             listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
             totalHeight += listItem.getMeasuredHeight();
         }
-
         ViewGroup.LayoutParams params = listView.getLayoutParams();
         params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
         listView.setLayoutParams(params);
         listView.requestLayout();
     }
 
-    public static String saveImage(Bitmap finalBitmap) {
+    public static String saveImage(Bitmap finalBitmap, Context context) {
         String dir = "/TPImmobilier";
-        String root = Environment.getExternalStorageDirectory().toString();
+        String root = context.getCacheDir().toString();
         File myDir = new File(root + dir);
         myDir.mkdirs();
         Random generator = new Random();

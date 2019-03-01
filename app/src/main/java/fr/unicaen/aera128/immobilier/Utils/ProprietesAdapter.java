@@ -1,6 +1,6 @@
 package fr.unicaen.aera128.immobilier.Utils;
 
-import android.os.Environment;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,6 +19,7 @@ import fr.unicaen.aera128.immobilier.R;
 
 public class ProprietesAdapter extends RecyclerView.Adapter<ProprietesAdapter.MyViewHolder> {
 
+    private final Context context;
     private List<Propriete> proprietes;
     private final OnItemClickListener listener;
 
@@ -44,9 +45,10 @@ public class ProprietesAdapter extends RecyclerView.Adapter<ProprietesAdapter.My
         }
     }
 
-    public ProprietesAdapter(List<Propriete> proprietes, OnItemClickListener listener) {
+    public ProprietesAdapter(List<Propriete> proprietes, Context context, OnItemClickListener listener) {
         this.proprietes = proprietes;
         this.listener = listener;
+        this.context = context;
     }
 
     @NonNull
@@ -62,8 +64,8 @@ public class ProprietesAdapter extends RecyclerView.Adapter<ProprietesAdapter.My
     public void onBindViewHolder(@NonNull MyViewHolder holder, int i) {
         Propriete propriete = proprietes.get(i);
         holder.bind(proprietes.get(i), listener);
-        if (propriete.getImages().get(0).contains(Environment.getExternalStorageDirectory().toString())) {
-            Picasso.get().load(new File(propriete.getImages().get(0))).rotate(-90).resize(200, 200).centerCrop().into(holder.image);
+        if (propriete.getImages().get(0).contains(context.getCacheDir().toString())) {
+            Picasso.get().load(new File(propriete.getImages().get(0))).resize(200, 200).centerCrop().into(holder.image);
         } else {
             Picasso.get().load(propriete.getImages().get(0)).resize(200, 200).centerCrop().into(holder.image);
         }
