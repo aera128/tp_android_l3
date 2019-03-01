@@ -102,6 +102,7 @@ public class ListFragment extends Fragment {
                 fragmentTransaction.commit();
             }
         });
+
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());

@@ -19,6 +19,7 @@ public class AnnonceSQLiteHelper extends SQLiteOpenHelper {
     public static final String COLUMN_VENDEUR = "vendeur";
     public static final String COLUMN_IMAGES = "images";
     public static final String COLUMN_DATE = "date";
+    public static final String COLUMN_COMMENT = "comment";
 
     public static final String TABLE_VENDEURS = "vendeurs";
     public static final String COLUMN_NOM = "nom";
@@ -45,6 +46,7 @@ public class AnnonceSQLiteHelper extends SQLiteOpenHelper {
             COLUMN_VENDEUR + " text not null," +
             COLUMN_IMAGES + " text not null," +
             COLUMN_DATE + " integer not null," +
+            COLUMN_COMMENT + " text," +
             "FOREIGN KEY(" + COLUMN_VENDEUR + ") REFERENCES " + TABLE_VENDEURS + "(" + COLUMN_ID + "));";
 
     private static final String CREATE_VENDEUR = "create table "

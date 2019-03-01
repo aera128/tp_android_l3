@@ -15,6 +15,7 @@ public class Propriete implements Serializable {
     private Vendeur vendeur;
     private List<String> images;
     private long date;
+    private List<String> comment;
 
     public String getId() {
         return id;
@@ -102,5 +103,13 @@ public class Propriete implements Serializable {
 
     public void setDate(long date) {
         this.date = date;
+    }
+
+    public List<String> getComment() {
+        return comment;
+    }
+
+    public void setComment(List<String> comment) {
+        this.comment = comment;
     }
 }
