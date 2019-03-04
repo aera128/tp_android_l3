@@ -82,7 +82,6 @@ public class HasardFragment extends Fragment {
     private int modeFragmentHasard = 0;
 
     private AnnonceDataSource annonceDB;
-
     /**
      * Composants de la vue
      */
