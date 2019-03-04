@@ -178,6 +178,20 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/SlateGray"
+                        android:text="Caractéristiques"
+                        android:textAlignment="center"
+                        android:textAppearance="@android:style/TextAppearance.WindowTitle" />
+
+                    <ListView
+                        android:id="@+id/listCaraVisio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:layout_editor_absoluteY="731dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/SlateGray"
                         android:text="Date de publication"
                         android:textAlignment="center"
                         android:textAppearance="@android:style/TextAppearance.WindowTitle" />
@@ -191,17 +205,45 @@
                         tools:layout_editor_absoluteY="383dp" />
 
                     <TextView
+                        android:id="@+id/textView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/SlateGray"
-                        android:text="Caractéristiques"
+                        android:text="Commentaires"
                         android:textAlignment="center"
                         android:textAppearance="@android:style/TextAppearance.WindowTitle" />
 
                     <ListView
-                        android:id="@+id/listCaraVisio"
+                        android:id="@+id/listComment"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:visibility="gone" />
+
+                    <LinearLayout
+                        android:id="@+id/commentVisio"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <EditText
+                            android:id="@+id/editComment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:hint="Commentaire"
+                            android:inputType="textMultiLine" />
+
+                        <Button
+                            android:id="@+id/btnAddComment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Ajouter commentaire" />
+
+                    </LinearLayout>
+
                 </LinearLayout>
 
                 liner

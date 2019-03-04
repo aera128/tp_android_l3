@@ -46,7 +46,7 @@ public class AnnonceSQLiteHelper extends SQLiteOpenHelper {
             COLUMN_VENDEUR + " text not null," +
             COLUMN_IMAGES + " text not null," +
             COLUMN_DATE + " integer not null," +
-            COLUMN_COMMENT + " text," +
+            COLUMN_COMMENT + " text not null," +
             "FOREIGN KEY(" + COLUMN_VENDEUR + ") REFERENCES " + TABLE_VENDEURS + "(" + COLUMN_ID + "));";
 
     private static final String CREATE_VENDEUR = "create table "

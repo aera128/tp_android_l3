@@ -40,8 +40,8 @@
 
         <ImageView
             android:id="@+id/imgAccueil"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="87dp"
+            android:layout_height="77dp"
             android:src="@drawable/ic_menu_home"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

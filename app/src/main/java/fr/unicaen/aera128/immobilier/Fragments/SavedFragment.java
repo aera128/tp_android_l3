@@ -137,4 +137,11 @@ public class SavedFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        proprietes = annonceDB.getAll();
+        mAdapter.notifyDataSetChanged();
+    }
 }

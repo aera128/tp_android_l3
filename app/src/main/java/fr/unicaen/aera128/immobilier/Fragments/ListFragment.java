@@ -150,21 +150,26 @@ public class ListFragment extends Fragment {
 
             @Override
             public void onFailure(Call call, IOException e) {
-                AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
 
-                alertDialog.setTitle("Info");
-                alertDialog.setMessage("Une erreur s'est produite");
-                alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        MainFragment fr = MainFragment.newInstance();
-                        FragmentManager fm = getFragmentManager();
-                        FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                        fragmentTransaction.replace(R.id.frame_main, fr);
-                        fragmentTransaction.commit();
+                        alertDialog.setTitle("Info");
+                        alertDialog.setMessage("Une erreur s'est produite");
+                        alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                MainFragment fr = MainFragment.newInstance();
+                                FragmentManager fm = getFragmentManager();
+                                FragmentTransaction fragmentTransaction = fm.beginTransaction();
+                                fragmentTransaction.replace(R.id.frame_main, fr);
+                                fragmentTransaction.commit();
+                            }
+                        });
+
+                        alertDialog.show();
                     }
                 });
-
-                alertDialog.show();
                 e.printStackTrace();
             }
 

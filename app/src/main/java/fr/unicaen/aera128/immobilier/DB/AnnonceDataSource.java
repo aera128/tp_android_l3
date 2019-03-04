@@ -59,6 +59,7 @@ public class AnnonceDataSource {
     public boolean insertPropriete(Propriete propriete) {
         insertVendeur(propriete.getVendeur());
         Cursor c = database.rawQuery("SELECT * FROM " + AnnonceSQLiteHelper.TABLE_PROPRIETES + " WHERE " + AnnonceSQLiteHelper.COLUMN_KEY + "=\"" + propriete.getId() + "\"", null);
+        Log.w(AnnonceDataSource.class.getName(), propriete.getId());
         if (c.getCount() == 0) {
             ContentValues values = new ContentValues();
             values.put(AnnonceSQLiteHelper.COLUMN_KEY, propriete.getId());
@@ -81,8 +82,20 @@ public class AnnonceDataSource {
             Log.w(AnnonceDataSource.class.getName(), "Propriete déjà existante");
             return false;
         }
+    }
 
-
+    public boolean updatePropriete(Propriete propriete) {
+        Cursor c = database.rawQuery("SELECT * FROM " + AnnonceSQLiteHelper.TABLE_PROPRIETES + " WHERE " + AnnonceSQLiteHelper.COLUMN_ID + "=\"" + propriete.getId() + "\"", null);
+        if (c.getCount() != 0) {
+            ContentValues values = new ContentValues();
+            values.put(AnnonceSQLiteHelper.COLUMN_COMMENT, Tool.convertArrayToString(propriete.getComment()));
+            database.update(AnnonceSQLiteHelper.TABLE_PROPRIETES, values, AnnonceSQLiteHelper.COLUMN_ID + " = " + propriete.getId(), null);
+            Log.w(AnnonceDataSource.class.getName(), "Propriete mis à jour");
+            return true;
+        } else {
+            Log.w(AnnonceDataSource.class.getName(), "Propriete non mis à jour");
+            return false;
+        }
     }
 
     public boolean insertVendeur(Vendeur vendeur) {
@@ -125,6 +138,11 @@ public class AnnonceDataSource {
                 propriete.setCodePostal(cursor.getString(8));
                 propriete.setImages(Tool.convertStringToArray(cursor.getString(10)));
                 propriete.setDate(cursor.getInt(11));
+                if (cursor.getString(12) == null) {
+                    propriete.setComment(new ArrayList<String>());
+                } else {
+                    propriete.setComment(Tool.convertStringToArray(cursor.getString(12)));
+                }
 
                 Vendeur vendeur = new Vendeur();
                 String q = "SELECT  * FROM " + AnnonceSQLiteHelper.TABLE_VENDEURS + " WHERE " + AnnonceSQLiteHelper.COLUMN_ID + "=\"" + cursor.getString(9) + "\"";

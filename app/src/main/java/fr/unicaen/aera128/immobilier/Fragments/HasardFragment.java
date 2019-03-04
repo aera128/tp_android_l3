@@ -13,6 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +27,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 
 import fr.unicaen.aera128.immobilier.DB.AnnonceDataSource;
@@ -58,6 +62,14 @@ public class HasardFragment extends Fragment {
     private Propriete propriete = null;
     private boolean isDB = false;
     private AnnonceDataSource annonceDB;
+    private EditText editComment;
+    private ListView listComment;
+    private FloatingActionButton btnSave;
+    private FloatingActionButton btnDel;
+    private LinearLayout commentContainer;
+    private ArrayAdapter<String> adapterComment;
+    private Button btnAddComment;
+    private ArrayList<String> localListComment;
 
     public HasardFragment() {
         // Required empty public constructor
@@ -105,8 +117,8 @@ public class HasardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         annonceDB = new AnnonceDataSource(getActivity());
         annonceDB.open();
-        FloatingActionButton btnSave = getActivity().findViewById(R.id.btnSaveAnnonce);
-        FloatingActionButton btnDel = getActivity().findViewById(R.id.btnDelete);
+        btnSave = getActivity().findViewById(R.id.btnSaveAnnonce);
+        btnDel = getActivity().findViewById(R.id.btnDelete);
 
         if (isDB) {
             btnSave.setVisibility(View.GONE);
@@ -121,6 +133,34 @@ public class HasardFragment extends Fragment {
                     } else {
                         Toast toast = Toast.makeText(getContext(), "Annonce non supprimée", Toast.LENGTH_SHORT);
                         toast.show();
+                    }
+                }
+            });
+
+            commentContainer = getActivity().findViewById(R.id.commentVisio);
+            commentContainer.setVisibility(View.VISIBLE);
+
+            listComment = getActivity().findViewById(R.id.listComment);
+            listComment.setVisibility(View.VISIBLE);
+            localListComment = new ArrayList<>(propriete.getComment());
+            adapterComment = new ArrayAdapter<String>(getContext(), R.layout.item_list, R.id.item_list_cara, localListComment);
+            listComment.setAdapter(adapterComment);
+            adapterComment.notifyDataSetChanged();
+            Tool.setListViewHeightBasedOnChildren(listComment);
+
+            editComment = getActivity().findViewById(R.id.editComment);
+
+            btnAddComment = getActivity().findViewById(R.id.btnAddComment);
+            btnAddComment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (editComment.getText().toString() != "") {
+                        localListComment.add(editComment.getText().toString());
+                        propriete.setComment(localListComment);
+                        annonceDB.updatePropriete(propriete);
+                        adapterComment.notifyDataSetChanged();
+                        editComment.setText("");
+                        Tool.setListViewHeightBasedOnChildren(listComment);
                     }
                 }
             });
