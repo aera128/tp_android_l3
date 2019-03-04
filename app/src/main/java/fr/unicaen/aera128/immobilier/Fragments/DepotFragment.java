@@ -187,7 +187,7 @@ public class DepotFragment extends Fragment {
                     propriete.setImages(listPhoto);
                     propriete.setDate(System.currentTimeMillis());
 
-                    HasardFragment fr = HasardFragment.newInstance(propriete, false);
+                    HasardFragment fr = HasardFragment.newInstance(propriete, 2);
                     FragmentManager fm = getFragmentManager();
                     FragmentTransaction fragmentTransaction = fm.beginTransaction();
                     fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);

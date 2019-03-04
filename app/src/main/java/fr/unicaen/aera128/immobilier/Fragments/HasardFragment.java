@@ -25,13 +25,18 @@ import android.widget.Toast;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
+import com.squareup.moshi.Types;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Random;
 
 import fr.unicaen.aera128.immobilier.DB.AnnonceDataSource;
 import fr.unicaen.aera128.immobilier.Models.Propriete;
@@ -62,8 +67,11 @@ public class HasardFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    private String url = "https://ensweb.users.info.unicaen.fr/android-estate/mock-api/liste.json";
+
+
     private Propriete propriete = null;
-    private boolean isDB = false;
+    private int modeFragmentHasard = 0;
     private AnnonceDataSource annonceDB;
     private EditText editComment;
     private ListView listComment;
@@ -77,6 +85,8 @@ public class HasardFragment extends Fragment {
     private Button btnPhotoSaved;
     private int REQUEST_TAKE_PHOTO;
     private ViewPagerAdapter adapterImage;
+    private JsonAdapter<List<Propriete>> jsonAdapter;
+    private List<Propriete> proprietes;
 
     public HasardFragment() {
         // Required empty public constructor
@@ -89,12 +99,12 @@ public class HasardFragment extends Fragment {
      * @return A new instance of fragment HasardFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HasardFragment newInstance(Propriete p, boolean isDB) {
+    public static HasardFragment newInstance(Propriete p, int modeFragmentHasard) {
         HasardFragment fragment = new HasardFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_PARAM1, p);
         fragment.setArguments(args);
-        fragment.setDB(isDB);
+        fragment.setDB(modeFragmentHasard);
         return fragment;
     }
 
@@ -127,7 +137,7 @@ public class HasardFragment extends Fragment {
         btnSave = getActivity().findViewById(R.id.btnSaveAnnonce);
         btnDel = getActivity().findViewById(R.id.btnDelete);
 
-        if (isDB) {
+        if (modeFragmentHasard == 1) {
             btnSave.setVisibility(View.GONE);
             btnDel.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -202,7 +212,6 @@ public class HasardFragment extends Fragment {
         if (propriete != null) {
             miseEnPage();
         } else {
-            String url = "https://ensweb.users.info.unicaen.fr/android-estate/mock-api/immobilier.json";
             convert(url);
         }
     }
@@ -220,8 +229,8 @@ public class HasardFragment extends Fragment {
         mListener = null;
     }
 
-    public void setDB(boolean DB) {
-        isDB = DB;
+    public void setDB(int DB) {
+        modeFragmentHasard = DB;
     }
 
     /**
@@ -300,13 +309,16 @@ public class HasardFragment extends Fragment {
                     if (!response.isSuccessful()) {
                         throw new IOException("Unexpected HTTP code " + response);
                     }
-                    String source = responseBody.string();
+                    final String source = responseBody.string();
                     JSONObject json = new JSONObject(source);
-                    JSONObject jsonResponse = json.getJSONObject("response");
+                    JSONArray jsonResponse = json.getJSONArray("response");
                     Moshi moshi = new Moshi.Builder()
                             .build();
-                    JsonAdapter<Propriete> jsonAdapter = moshi.adapter(Propriete.class);
-                    propriete = jsonAdapter.fromJson(jsonResponse.toString());
+                    Type type = Types.newParameterizedType(List.class, Propriete.class);
+                    jsonAdapter = moshi.adapter(type);
+                    proprietes = jsonAdapter.fromJson(jsonResponse.toString());
+                    Random random = new Random();
+                    propriete = proprietes.get(random.nextInt(proprietes.size()));
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -331,6 +343,14 @@ public class HasardFragment extends Fragment {
             annonceDB.updatePropriete(propriete);
             adapterImage.notifyDataSetChanged();
         } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (modeFragmentHasard == 0) {
+            convert(url);
         }
     }
 }

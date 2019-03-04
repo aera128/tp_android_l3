@@ -85,7 +85,7 @@ public class SavedFragment extends Fragment {
         mAdapter = new ProprietesAdapter(proprietes, getContext(), new OnItemClickListener() {
             @Override
             public void onItemClick(Propriete item) {
-                HasardFragment fr = HasardFragment.newInstance(item, true);
+                HasardFragment fr = HasardFragment.newInstance(item, 1);
                 FragmentManager fm = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fm.beginTransaction();
                 fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
