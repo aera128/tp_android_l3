@@ -15,9 +15,11 @@ import fr.unicaen.aera128.immobilier.Utils.Tool;
 
 public class AnnonceDataSource {
 
-    // Champs de la base de données
     private SQLiteDatabase database;
     private AnnonceSQLiteHelper dbHelper;
+    /**
+     * Champs de la base de données
+     */
     private String[] Colums_propriete =
             {
                     AnnonceSQLiteHelper.COLUMN_ID,
@@ -43,24 +45,32 @@ public class AnnonceDataSource {
                     AnnonceSQLiteHelper.COLUMN_TEL
             };
 
+
     public AnnonceDataSource(Context context) {
         dbHelper = new AnnonceSQLiteHelper(context);
     }
 
     public void open() throws SQLException {
         database = dbHelper.getWritableDatabase();
-//        dbHelper.onUpgrade(database, 1, 1);
     }
 
     public void close() {
         dbHelper.close();
     }
 
+    /**
+     * Insertion du propriété
+     */
     public boolean insertPropriete(Propriete propriete) {
         insertVendeur(propriete.getVendeur());
+        /**
+         * On vérifie si cette propriété existe déjà ou non
+         */
         Cursor c = database.rawQuery("SELECT * FROM " + AnnonceSQLiteHelper.TABLE_PROPRIETES + " WHERE " + AnnonceSQLiteHelper.COLUMN_KEY + "=\"" + propriete.getId() + "\"", null);
-        Log.w(AnnonceDataSource.class.getName(), propriete.getId());
         if (c.getCount() == 0) {
+            /**
+             * Remplissage des données
+             */
             ContentValues values = new ContentValues();
             values.put(AnnonceSQLiteHelper.COLUMN_KEY, propriete.getId());
             values.put(AnnonceSQLiteHelper.COLUMN_TITRE, propriete.getTitre());
@@ -75,6 +85,9 @@ public class AnnonceDataSource {
             String imgTmp = Tool.convertArrayToString(propriete.getImages());
             values.put(AnnonceSQLiteHelper.COLUMN_IMAGES, imgTmp);
             values.put(AnnonceSQLiteHelper.COLUMN_DATE, propriete.getDate());
+            /**
+             * Insertion dans la base de données
+             */
             database.insert(AnnonceSQLiteHelper.TABLE_PROPRIETES, null, values);
             Log.w(AnnonceDataSource.class.getName(), "Propriete inséré");
             return true;
@@ -84,12 +97,25 @@ public class AnnonceDataSource {
         }
     }
 
+    /**
+     * Mis à jour d'une propriété lors d'un ajout d'un commentaire ou d'une image
+     */
     public boolean updatePropriete(Propriete propriete) {
+        /**
+         * On vérifie si cette propriété existe
+         */
         Cursor c = database.rawQuery("SELECT * FROM " + AnnonceSQLiteHelper.TABLE_PROPRIETES + " WHERE " + AnnonceSQLiteHelper.COLUMN_ID + "=\"" + propriete.getId() + "\"", null);
         if (c.getCount() != 0) {
+            /**
+             * Remplissage des données
+             */
             ContentValues values = new ContentValues();
             values.put(AnnonceSQLiteHelper.COLUMN_IMAGES, Tool.convertArrayToString(propriete.getImages()));
             values.put(AnnonceSQLiteHelper.COLUMN_COMMENT, Tool.convertArrayToString(propriete.getComment()));
+
+            /**
+             * Mis à jour dans la base de données
+             */
             database.update(AnnonceSQLiteHelper.TABLE_PROPRIETES, values, AnnonceSQLiteHelper.COLUMN_ID + " = " + propriete.getId(), null);
             Log.w(AnnonceDataSource.class.getName(), "Propriete mis à jour");
             return true;
@@ -99,9 +125,18 @@ public class AnnonceDataSource {
         }
     }
 
+    /**
+     * Insertion d'un vendeur
+     */
     public boolean insertVendeur(Vendeur vendeur) {
+        /**
+         * On vérifie si ce vendeur existe ou non
+         */
         Cursor c = database.rawQuery("SELECT * FROM " + AnnonceSQLiteHelper.TABLE_VENDEURS + " WHERE " + AnnonceSQLiteHelper.COLUMN_ID + "=\"" + vendeur.getId() + "\"", null);
         if (c.getCount() == 0) {
+            /**
+             * Remplissage des données
+             */
             ContentValues values = new ContentValues();
             values.put(AnnonceSQLiteHelper.COLUMN_ID, vendeur.getId());
             values.put(AnnonceSQLiteHelper.COLUMN_NOM, vendeur.getNom());
@@ -109,6 +144,9 @@ public class AnnonceDataSource {
             values.put(AnnonceSQLiteHelper.COLUMN_EMAIL, vendeur.getEmail());
             values.put(AnnonceSQLiteHelper.COLUMN_TEL, vendeur.getTelephone());
 
+            /**
+             * Insertion dans la base de données
+             */
             database.insert(AnnonceSQLiteHelper.TABLE_VENDEURS, null, values);
             Log.w(AnnonceDataSource.class.getName(), "Vendeur inséré");
             return true;
@@ -118,6 +156,10 @@ public class AnnonceDataSource {
         }
     }
 
+
+    /**
+     * Selection de toutes les propriétes sauvegardées dans la base de données
+     */
     public ArrayList<Propriete> getAll() {
         ArrayList<Propriete> proprietes = new ArrayList<Propriete>();
 
@@ -126,8 +168,15 @@ public class AnnonceDataSource {
         Cursor cursor = database.rawQuery(query, null);
 
         Propriete propriete = null;
+        /**
+         * tant que l'on ne tombe pas sur une propriété nulle on l'ajoute à notre liste
+         */
         if (cursor.moveToFirst()) {
             do {
+
+                /**
+                 * Partie propriété
+                 */
                 propriete = new Propriete();
                 propriete.setId(cursor.getString(0));
                 propriete.setTitre(cursor.getString(2));
@@ -145,6 +194,9 @@ public class AnnonceDataSource {
                     propriete.setComment(Tool.convertStringToArray(cursor.getString(12)));
                 }
 
+                /**
+                 * Partie vendeur
+                 */
                 Vendeur vendeur = new Vendeur();
                 String q = "SELECT  * FROM " + AnnonceSQLiteHelper.TABLE_VENDEURS + " WHERE " + AnnonceSQLiteHelper.COLUMN_ID + "=\"" + cursor.getString(9) + "\"";
 
@@ -159,7 +211,6 @@ public class AnnonceDataSource {
                         vendeur.setTelephone(c.getString(4));
                     } while (c.moveToNext());
                 }
-
                 propriete.setVendeur(vendeur);
                 proprietes.add(propriete);
             } while (cursor.moveToNext());
@@ -167,6 +218,9 @@ public class AnnonceDataSource {
         return proprietes;
     }
 
+    /**
+     * Selection de tous les vendeurs sauvegardés dans la base de données
+     */
     public ArrayList<Vendeur> getAllVendeur() {
         ArrayList<Vendeur> vendeurs = new ArrayList<Vendeur>();
 
@@ -187,6 +241,9 @@ public class AnnonceDataSource {
         return vendeurs;
     }
 
+    /**
+     * Suppression d'une propriété
+     */
     public boolean deletePropriete(Propriete propriete) {
         String id = propriete.getId();
         System.out.println("Propriete deleted with id: " + id);
@@ -196,12 +253,14 @@ public class AnnonceDataSource {
         Cursor c = database.rawQuery("SELECT * FROM " + AnnonceSQLiteHelper.TABLE_PROPRIETES + " WHERE " + AnnonceSQLiteHelper.COLUMN_KEY + "=\"" + propriete.getId() + "\"", null);
         if (c.getCount() == 0) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
+    /**
+     * Suppression d'un vendeur
+     */
     public void deleteVendeur(Vendeur vendeur) {
         String id = vendeur.getId();
         System.out.println("Vendeur deleted with id: " + id);

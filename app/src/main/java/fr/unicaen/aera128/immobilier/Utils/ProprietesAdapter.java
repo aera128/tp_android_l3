@@ -23,6 +23,10 @@ public class ProprietesAdapter extends RecyclerView.Adapter<ProprietesAdapter.My
     private List<Propriete> proprietes;
     private final OnItemClickListener listener;
 
+    /**
+     * ViewHolder (container) d'une propriété
+     * gère l'affichage d'un item de la liste
+     */
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView titre, ville, prix;
         public ImageView image;
@@ -56,7 +60,6 @@ public class ProprietesAdapter extends RecyclerView.Adapter<ProprietesAdapter.My
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_liste_biens, parent, false);
-
         return new MyViewHolder(itemView);
     }
 
@@ -64,6 +67,9 @@ public class ProprietesAdapter extends RecyclerView.Adapter<ProprietesAdapter.My
     public void onBindViewHolder(@NonNull MyViewHolder holder, int i) {
         Propriete propriete = proprietes.get(i);
         holder.bind(proprietes.get(i), listener);
+        /**
+         * Verification si l'image est en locale ou non
+         */
         if (propriete.getImages().get(0).contains(context.getCacheDir().toString())) {
             Picasso.get().load(new File(propriete.getImages().get(0))).resize(200, 200).centerCrop().into(holder.image);
         } else {

@@ -6,6 +6,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 public class AnnonceSQLiteHelper extends SQLiteOpenHelper {
+    /**
+     * Champs de la base de données
+     */
     public static final String TABLE_PROPRIETES = "propietes";
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_KEY = "cle";
@@ -28,10 +31,16 @@ public class AnnonceSQLiteHelper extends SQLiteOpenHelper {
     public static final String COLUMN_TEL = "telephone";
 
 
+    /**
+     * Nom du fichier
+     * indication de la version
+     */
     private static final String DATABASE_NAME = "annonces.db";
     private static final int DATABASE_VERSION = 1;
 
-    // Commande sql pour la création de la base de données
+    /**
+     * Déclaration de la requête de création de la table propriété
+     */
     private static final String CREATE_PROPRIETE = "create table "
             + TABLE_PROPRIETES + "(" +
             COLUMN_ID + " integer primary key autoincrement, " +
@@ -47,8 +56,15 @@ public class AnnonceSQLiteHelper extends SQLiteOpenHelper {
             COLUMN_IMAGES + " text not null," +
             COLUMN_DATE + " integer not null," +
             COLUMN_COMMENT + " text not null," +
+            /**
+             * On met le vendeur en clé étrangère dans la table propriété pour
+             * lier le vendeur de la propriété avec l'id du vendeur en question
+             */
             "FOREIGN KEY(" + COLUMN_VENDEUR + ") REFERENCES " + TABLE_VENDEURS + "(" + COLUMN_ID + "));";
 
+    /**
+     * Déclaration de la requête de création de la table vendeur
+     */
     private static final String CREATE_VENDEUR = "create table "
             + TABLE_VENDEURS + "(" +
             COLUMN_ID + " text primary key, " +
@@ -63,6 +79,9 @@ public class AnnonceSQLiteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase database) {
+        /**
+         * Création des 2 tables
+         */
         database.execSQL(CREATE_VENDEUR);
         database.execSQL(CREATE_PROPRIETE);
     }

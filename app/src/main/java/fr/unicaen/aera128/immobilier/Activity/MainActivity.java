@@ -22,12 +22,18 @@ import fr.unicaen.aera128.immobilier.R;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    /**
+     * fragments disponibles
+     */
     private Fragment fragmentAccueil;
     private Fragment fragmentHasard;
     private Fragment fragmentListe;
     private Fragment fragmentDepot;
     private Fragment fragmentSaved;
 
+    /**
+     * ID des fragments
+     */
     private static final int FRAGMENT_ACCUEIL = 0;
     private static final int FRAGMENT_HASARD = 1;
     private static final int FRAGMENT_LISTE = 2;
@@ -37,22 +43,45 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /**
+         * Assignation de la vue
+         */
         setContentView(R.layout.activity_main);
+
+        /**
+         * Déclaration de la Toolbar
+         */
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        /**
+         * Assignation de la toolbar comme action par défaut
+         */
         setSupportActionBar(toolbar);
 
+        /**
+         * Initialisation
+         */
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
+        /**
+         * Synchronisation
+         */
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        /**
+         * Affichage du frament accueil au démarrage de l'application
+         */
         showAccueilFragment();
     }
 
+    /**
+     * Gestion du bouton retour (automatique avec le backstack des framents)
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -63,28 +92,26 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
+
+    /**
+     * Gestion de l'affichage du bon fragment en fonction de l'élement selectionné du navigation drawer
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -92,7 +119,6 @@ public class MainActivity extends AppCompatActivity
         for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
             fm.popBackStack();
         }
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_accueil) {
@@ -117,6 +143,9 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    /**
+     * Gestion de l'affichage
+     */
     private void showFragment(int fragmentIdentifier) {
         switch (fragmentIdentifier) {
             case FRAGMENT_ACCUEIL:
@@ -139,6 +168,9 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Affichage
+     */
     private void showAccueilFragment() {
         if (this.fragmentAccueil == null)
             this.fragmentAccueil = MainFragment.newInstance();
@@ -165,6 +197,9 @@ public class MainActivity extends AppCompatActivity
         this.startTransactionFragment(this.fragmentSaved);
     }
 
+    /**
+     * Finalisation de l'affichage
+     */
     private void startTransactionFragment(Fragment fragment) {
         if (!fragment.isVisible()) {
             getSupportFragmentManager().beginTransaction()

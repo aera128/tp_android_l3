@@ -1,6 +1,8 @@
 package fr.unicaen.aera128.immobilier.Fragments;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -11,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,8 +63,7 @@ import okhttp3.ResponseBody;
  * create an instance of this fragment.
  */
 public class HasardFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -69,38 +71,57 @@ public class HasardFragment extends Fragment {
 
     private String url = "https://ensweb.users.info.unicaen.fr/android-estate/mock-api/liste.json";
 
-
     private Propriete propriete = null;
+
+    /**
+     * Mode du fragment :
+     * 0 = Propriété aléatoire
+     * 1 = Propriété sauvegardée dans la base de données
+     * 2 = autre propriété
+     */
     private int modeFragmentHasard = 0;
+
     private AnnonceDataSource annonceDB;
+
+    /**
+     * Composants de la vue
+     */
     private EditText editComment;
     private ListView listComment;
     private FloatingActionButton btnSave;
     private FloatingActionButton btnDel;
     private LinearLayout commentContainer;
-    private ArrayAdapter<String> adapterComment;
     private Button btnAddComment;
-    private ArrayList<String> localListComment;
-    private ArrayList<String> localListPhoto;
     private Button btnPhotoSaved;
-    private int REQUEST_TAKE_PHOTO;
-    private ViewPagerAdapter adapterImage;
-    private JsonAdapter<List<Propriete>> jsonAdapter;
-    private List<Propriete> proprietes;
 
-    public HasardFragment() {
-        // Required empty public constructor
-    }
+    private List<Propriete> proprietes;
+    /**
+     * Stockage pour un affichage dynamique en fonction des adapters
+     */
+    private ArrayList<String> localListPhoto;
+    private ArrayList<String> localListComment;
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment HasardFragment.
+     * Adapteurs
      */
-    // TODO: Rename and change types and number of parameters
+    private ViewPagerAdapter adapterImage;
+    private JsonAdapter<List<Propriete>> jsonAdapter;
+    private ArrayAdapter<String> adapterComment;
+
+    private int REQUEST_TAKE_PHOTO;
+
+    public HasardFragment() {
+    }
+
+
+    /**
+     * @return une nouvelle instance d'un fragment avec une propriété
+     */
     public static HasardFragment newInstance(Propriete p, int modeFragmentHasard) {
         HasardFragment fragment = new HasardFragment();
+        /**
+         * Gestion des paramètres
+         */
         Bundle args = new Bundle();
         args.putSerializable(ARG_PARAM1, p);
         fragment.setArguments(args);
@@ -108,6 +129,9 @@ public class HasardFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * @return une nouvelle instance d'un fragment
+     */
     public static HasardFragment newInstance() {
         HasardFragment fragment = new HasardFragment();
         return fragment;
@@ -117,6 +141,9 @@ public class HasardFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            /**
+             * récupération de la propriété
+             */
             propriete = (Propriete) getArguments().getSerializable(ARG_PARAM1);
         }
     }
@@ -124,7 +151,6 @@ public class HasardFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_hasard, container, false);
     }
 
@@ -132,13 +158,27 @@ public class HasardFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        /**
+         * Déclaration de la base de données
+         */
         annonceDB = new AnnonceDataSource(getActivity());
         annonceDB.open();
+
+        /**
+         * Gestion des boutons sauvegarder et suppression
+         */
         btnSave = getActivity().findViewById(R.id.btnSaveAnnonce);
         btnDel = getActivity().findViewById(R.id.btnDelete);
 
         if (modeFragmentHasard == 1) {
+            /**
+             * on retire le bouton sauvegarder
+             */
             btnSave.setVisibility(View.GONE);
+
+            /**
+             * Gestion du bouton suppression
+             */
             btnDel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -154,9 +194,15 @@ public class HasardFragment extends Fragment {
                 }
             });
 
+            /**
+             * Affichage de la partie commentaire
+             */
             commentContainer = getActivity().findViewById(R.id.commentVisio);
             commentContainer.setVisibility(View.VISIBLE);
 
+            /**
+             * Gestion de la liste des commentaires
+             */
             listComment = getActivity().findViewById(R.id.listComment);
             listComment.setVisibility(View.VISIBLE);
             localListComment = new ArrayList<>(propriete.getComment());
@@ -165,8 +211,10 @@ public class HasardFragment extends Fragment {
             adapterComment.notifyDataSetChanged();
             Tool.setListViewHeightBasedOnChildren(listComment);
 
+            /**
+             * Gestion de l'ajout d'un commentaire
+             */
             editComment = getActivity().findViewById(R.id.editComment);
-
             btnAddComment = getActivity().findViewById(R.id.btnAddComment);
             btnAddComment.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -182,6 +230,9 @@ public class HasardFragment extends Fragment {
                 }
             });
 
+            /**
+             * Gestion de l'ajout d'une photo
+             */
             btnPhotoSaved = getActivity().findViewById(R.id.btnPhotoSaved);
             btnPhotoSaved.setVisibility(View.VISIBLE);
             btnPhotoSaved.setOnClickListener(new View.OnClickListener() {
@@ -194,7 +245,13 @@ public class HasardFragment extends Fragment {
                 }
             });
         } else {
+            /**
+             * On retire le bouton de suppression
+             */
             btnDel.setVisibility(View.GONE);
+            /**
+             * Gestion de la sauvegarde d'une propriété
+             */
             btnSave.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -209,6 +266,10 @@ public class HasardFragment extends Fragment {
             });
         }
 
+        /**
+         * si une propriété existe on l'affiche directement
+         * sinon on en affiche une aléatorement
+         */
         if (propriete != null) {
             miseEnPage();
         } else {
@@ -248,10 +309,16 @@ public class HasardFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    /**
+     * Gestion de l'affichage de la propriété
+     */
     private void miseEnPage() {
         TextView titre = getActivity().findViewById(R.id.titleVisio);
         titre.setText(propriete.getTitre());
 
+        /**
+         * Affichage du carousel d'images
+         */
         ViewPager viewPager = getActivity().findViewById(R.id.carousel);
         localListPhoto = new ArrayList<String>(propriete.getImages());
         adapterImage = new ViewPagerAdapter(getContext(), localListPhoto);
@@ -274,9 +341,8 @@ public class HasardFragment extends Fragment {
         Date date = ts;
         dateView.setText(date.toString());
 
-
         TextView nomVendeur = getActivity().findViewById(R.id.nomVendeur);
-        nomVendeur.setText(propriete.getVendeur().getPrenom() + " " + propriete.getVendeur().getNom());
+        nomVendeur.setText(propriete.getVendeur().toString());
 
         TextView mailVendeur = getActivity().findViewById(R.id.mailVendeur);
         mailVendeur.setText(propriete.getVendeur().getEmail());
@@ -284,13 +350,18 @@ public class HasardFragment extends Fragment {
         TextView telVendeur = getActivity().findViewById(R.id.telVendeur);
         telVendeur.setText(propriete.getVendeur().getTelephone());
 
+        /**
+         * Affichage des la liste des caractéristiques
+         */
         ArrayAdapter<String> adapterCara = new ArrayAdapter<String>(getContext(), R.layout.item_list, R.id.item_list_cara, propriete.getCaracteristiques());
         ListView listView = getActivity().findViewById(R.id.listCaraVisio);
         listView.setAdapter(adapterCara);
         Tool.setListViewHeightBasedOnChildren(listView);
     }
 
-
+    /**
+     * Conversion d'une réponse okHttp en propriété
+     */
     private void convert(String url) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
@@ -300,6 +371,29 @@ public class HasardFragment extends Fragment {
 
             @Override
             public void onFailure(Call call, IOException e) {
+                /**
+                 * Affichage d'une fenêtre de dialogue lors d'une erreur de requete okHttp
+                 */
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+
+                        alertDialog.setTitle("Info");
+                        alertDialog.setMessage("Une erreur s'est produite");
+                        alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                MainFragment fr = MainFragment.newInstance();
+                                FragmentManager fm = getFragmentManager();
+                                FragmentTransaction fragmentTransaction = fm.beginTransaction();
+                                fragmentTransaction.replace(R.id.frame_main, fr);
+                                fragmentTransaction.commit();
+                            }
+                        });
+
+                        alertDialog.show();
+                    }
+                });
                 e.printStackTrace();
             }
 
@@ -314,11 +408,18 @@ public class HasardFragment extends Fragment {
                     JSONArray jsonResponse = json.getJSONArray("response");
                     Moshi moshi = new Moshi.Builder()
                             .build();
+                    /**
+                     * Récupération de la liste des propriétés
+                     */
                     Type type = Types.newParameterizedType(List.class, Propriete.class);
                     jsonAdapter = moshi.adapter(type);
                     proprietes = jsonAdapter.fromJson(jsonResponse.toString());
+                    /**
+                     * Choix au hasard parmi cette liste
+                     */
                     Random random = new Random();
                     propriete = proprietes.get(random.nextInt(proprietes.size()));
+
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -332,6 +433,9 @@ public class HasardFragment extends Fragment {
         });
     }
 
+    /**
+     * Gestion de l'ajout d'une photo lors du retour sur l'application
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -346,6 +450,9 @@ public class HasardFragment extends Fragment {
         }
     }
 
+    /**
+     * Affichage d'une autre propriété aléatoire lors du retour sur le fragment en mode 0
+     */
     @Override
     public void onResume() {
         super.onResume();

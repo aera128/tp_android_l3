@@ -15,17 +15,22 @@ import java.util.Random;
 
 public class Tool {
 
+    /**
+     * Singleton donc le constructeur est privé
+     */
     private Tool() {
-
     }
 
+    /**
+     * Hauteur dynamique d'une listview en fonction de son nombre d'éléments
+     */
     public static boolean setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter != null) {
-
             int numberOfItems = listAdapter.getCount();
-
-            // Get total height of all items.
+            /**
+             * Récupération de la hauteur de tous les items
+             */
             int totalItemsHeight = 0;
             for (int itemPos = 0; itemPos < numberOfItems; itemPos++) {
                 View item = listAdapter.getView(itemPos, null, listView);
@@ -34,34 +39,55 @@ public class Tool {
                 totalItemsHeight += item.getMeasuredHeight();
             }
 
-            // Get total height of all item dividers.
+            /**
+             * Récupération de la hauteur de tous les séparateurs/diviseurs des items
+             */
             int totalDividersHeight = listView.getDividerHeight() *
                     (numberOfItems - 1);
-            // Get padding
+            /**
+             * Récupération de la marge
+             */
             int totalPadding = listView.getPaddingTop() + listView.getPaddingBottom();
 
-            // Set list height.
+            /**
+             * Définition de la hauteur
+             */
             ViewGroup.LayoutParams params = listView.getLayoutParams();
             params.height = totalItemsHeight + totalDividersHeight + totalPadding;
             listView.setLayoutParams(params);
             listView.requestLayout();
             return true;
-
         } else {
             return false;
         }
 
     }
 
+    /**
+     * Sauvegarde d'une image
+     *
+     * @return le chemin de l'image sauvegardée
+     */
     public static String saveImage(Bitmap finalBitmap, Context context) {
+        /**
+         * Dossier de l'application
+         */
         String dir = "/TPImmobilier";
+
+        /**
+         * Récupération du path du cache directory
+         */
         String root = context.getCacheDir().toString();
         File myDir = new File(root + dir);
         myDir.mkdirs();
+
+        /**
+         * Génération de l'image
+         */
         Random generator = new Random();
-        int n = 10000;
+        int n = 100000;
         n = generator.nextInt(n);
-        String fname = "Image-" + n + ".jpg";
+        String fname = "image-" + n + ".jpg";
         File file = new File(myDir, fname);
         if (file.exists()) file.delete();
         try {
@@ -76,6 +102,10 @@ public class Tool {
         return root + dir + "/" + fname;
     }
 
+    /**
+     * Conversion d'une liste en chaine de caractère
+     * @return une liste
+     */
     public static String convertArrayToString(List<String> array) {
         String strSeparator = "__,__";
         String str = "";
@@ -88,6 +118,10 @@ public class Tool {
         return str;
     }
 
+    /**
+     * Conversion d'une chaine de caractère en liste
+     * @return un String
+     */
     public static List<String> convertStringToArray(String str) {
         String strSeparator = "__,__";
         String[] arr = str.split(strSeparator);

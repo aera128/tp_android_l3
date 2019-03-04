@@ -77,14 +77,28 @@ public class SavedFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        /**
+         * Déclaration de la base de données
+         */
         annonceDB = new AnnonceDataSource(getActivity());
         annonceDB.open();
 
+        /**
+         * Gestion de la reclyrerview
+         */
+
         recyclerView = (RecyclerView) getActivity().findViewById(R.id.listeSaved);
 
+        /**
+         * Déclaration de l'adapter d'affichage d'une propriété dans une liste et
+         * gestion du clic sur un item de la liste
+         */
         mAdapter = new ProprietesAdapter(proprietes, getContext(), new OnItemClickListener() {
             @Override
             public void onItemClick(Propriete item) {
+                /**
+                 * Envoi sur la visualisation de la propriété cliquée
+                 */
                 HasardFragment fr = HasardFragment.newInstance(item, 1);
                 FragmentManager fm = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fm.beginTransaction();
@@ -94,11 +108,18 @@ public class SavedFragment extends Fragment {
                 fragmentTransaction.commit();
             }
         });
+
+        /**
+         * Lien entre l'adapter et la recyclerview
+         */
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
 
+        /**
+         * Récupération de toutes les propriétés sauvegardées
+         */
         proprietes = annonceDB.getAll();
         mAdapter.setProprietes(proprietes);
         getActivity().runOnUiThread(new Runnable() {
@@ -141,6 +162,10 @@ public class SavedFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        /**
+         * Récupération de toutes les propriétés sauvegardées
+         * lors du retour sur le fragment
+         */
         proprietes = annonceDB.getAll();
         mAdapter.notifyDataSetChanged();
     }

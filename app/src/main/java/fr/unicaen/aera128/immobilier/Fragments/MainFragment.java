@@ -1,5 +1,7 @@
 package fr.unicaen.aera128.immobilier.Fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -55,7 +57,6 @@ public class MainFragment extends Fragment {
     private ProprietesAdapter mAdapter;
 
     public MainFragment() {
-        // Required empty public constructor
     }
 
     /**
@@ -146,6 +147,29 @@ public class MainFragment extends Fragment {
 
             @Override
             public void onFailure(Call call, IOException e) {
+                /**
+                 * Affichage d'une fenêtre de dialogue lors d'une erreur de requete okHttp
+                 */
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+
+                        alertDialog.setTitle("Info");
+                        alertDialog.setMessage("Une erreur s'est produite");
+                        alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                MainFragment fr = MainFragment.newInstance();
+                                FragmentManager fm = getFragmentManager();
+                                FragmentTransaction fragmentTransaction = fm.beginTransaction();
+                                fragmentTransaction.replace(R.id.frame_main, fr);
+                                fragmentTransaction.commit();
+                            }
+                        });
+
+                        alertDialog.show();
+                    }
+                });
                 e.printStackTrace();
             }
 

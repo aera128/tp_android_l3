@@ -49,7 +49,7 @@ public class DepotFragment extends Fragment {
     private ArrayAdapter<String> adapter;
     private ViewPagerAdapter adapterPhoto;
 
-    //components
+
     private EditText editTitre;
     private EditText editDescription;
     private EditText editPiece;
@@ -60,7 +60,9 @@ public class DepotFragment extends Fragment {
     private EditText editCodePostal;
     private ArrayList<String> listPhoto;
 
-
+    /**
+     * Composants interactifs de la vue
+     */
     private Button btnAdd;
     private Button btnPhoto;
     private Button btnVendeur;
@@ -92,6 +94,9 @@ public class DepotFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
+            /**
+             * Récupération des listes de photos et caractéristiques si on reviens à partir d'un autre contexte
+             */
             DepotFragment fr = (DepotFragment) getFragmentManager().getFragment(savedInstanceState, "SaveDepot");
             listPhoto = fr.getListPhoto();
             listCaracteristiques = fr.getListCaracteristiques();
@@ -109,9 +114,15 @@ public class DepotFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        /**
+         * Déclaration de la base de données
+         */
         annonceDB = new AnnonceDataSource(getActivity());
         annonceDB.open();
 
+        /**
+         * Assignation des composants de la vue
+         */
         editTitre = getActivity().findViewById(R.id.editTitre);
         editDescription = getActivity().findViewById(R.id.editDescription);
         editPiece = getActivity().findViewById(R.id.editPiece);
@@ -120,6 +131,13 @@ public class DepotFragment extends Fragment {
         editVille = getActivity().findViewById(R.id.editVille);
         editCodePostal = getActivity().findViewById(R.id.editCodePostal);
 
+        /**
+         * Partie photos
+         */
+
+        /**
+         * Gestion de l'affichage des photos si la liste est vide
+         */
         if (listPhoto == null) {
             listPhoto = new ArrayList<String>();
         } else {
@@ -130,31 +148,6 @@ public class DepotFragment extends Fragment {
         viewPager = getActivity().findViewById(R.id.carouselDepot);
         adapterPhoto = new ViewPagerAdapter(getContext(), listPhoto);
         viewPager.setAdapter(adapterPhoto);
-
-        if (listCaracteristiques == null) {
-            listCaracteristiques = new ArrayList<String>();
-        }
-        adapter = new ArrayAdapter<String>(getContext(), R.layout.item_list, R.id.item_list_cara, listCaracteristiques);
-        listView = getActivity().findViewById(R.id.listCara);
-        listView.setAdapter(adapter);
-        btnAdd = getActivity().findViewById(R.id.btnAdd);
-        btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!editCara.getText().toString().equals("")) {
-                    listCaracteristiques.add(editCara.getText().toString());
-                    editCara.setText("");
-                    adapter.notifyDataSetChanged();
-                    Tool.setListViewHeightBasedOnChildren(listView);
-                }
-            }
-        });
-
-        listVendeur = annonceDB.getAllVendeur();
-        ArrayAdapter<Vendeur> adapterVendeur = new ArrayAdapter<Vendeur>(getActivity(), R.layout.item_list, R.id.item_list_cara, listVendeur);
-
-        spinner = getActivity().findViewById(R.id.spinnerVendeur);
-        spinner.setAdapter(adapterVendeur);
 
         btnPhoto = getActivity().findViewById(R.id.btnPhoto);
         btnPhoto.setOnClickListener(new View.OnClickListener() {
@@ -167,6 +160,55 @@ public class DepotFragment extends Fragment {
             }
         });
 
+        /**
+         * Partie caractéristiques
+         */
+        if (listCaracteristiques == null) {
+            listCaracteristiques = new ArrayList<String>();
+        }
+        adapter = new ArrayAdapter<String>(getContext(), R.layout.item_list, R.id.item_list_cara, listCaracteristiques);
+        listView = getActivity().findViewById(R.id.listCara);
+        listView.setAdapter(adapter);
+        btnAdd = getActivity().findViewById(R.id.btnAdd);
+
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!editCara.getText().toString().equals("")) {
+                    listCaracteristiques.add(editCara.getText().toString());
+                    editCara.setText("");
+                    adapter.notifyDataSetChanged();
+                    Tool.setListViewHeightBasedOnChildren(listView);
+                }
+            }
+        });
+
+        /**
+         * Partie vendeur
+         */
+        listVendeur = annonceDB.getAllVendeur();
+        ArrayAdapter<Vendeur> adapterVendeur = new ArrayAdapter<Vendeur>(getActivity(), R.layout.item_list, R.id.item_list_cara, listVendeur);
+
+        spinner = getActivity().findViewById(R.id.spinnerVendeur);
+        spinner.setAdapter(adapterVendeur);
+
+        btnVendeur = getActivity().findViewById(R.id.btnAddVendeur);
+        btnVendeur.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddVendeurFragment fr = AddVendeurFragment.newInstance();
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fm.beginTransaction();
+                fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
+                fragmentTransaction.replace(R.id.frame_main, fr);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
+
+        /**
+         * Partie prévisualisation
+         */
         btnPreview = getActivity().findViewById(R.id.btnPreview);
         btnPreview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -201,22 +243,11 @@ public class DepotFragment extends Fragment {
             }
         });
 
-        btnVendeur = getActivity().findViewById(R.id.btnAddVendeur);
-        btnVendeur.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AddVendeurFragment fr = AddVendeurFragment.newInstance();
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
-                fragmentTransaction.replace(R.id.frame_main, fr);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-            }
-        });
-
     }
 
+    /**
+     * Vérification du formulaire
+     */
     private boolean isFormValid() {
         if (editTitre.getText().toString() == "") return false;
         if (editDescription.getText().toString() == "") return false;
@@ -230,35 +261,9 @@ public class DepotFragment extends Fragment {
         return true;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
     /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
+     * Gestion de la sauvegarde d'une image lors du retour sur l'application
      */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -274,20 +279,9 @@ public class DepotFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        getFragmentManager().putFragment(outState, "SaveDepot", this);
-    }
-
-    public ArrayList<String> getListCaracteristiques() {
-        return listCaracteristiques;
-    }
-
-    public ArrayList<String> getListPhoto() {
-        return listPhoto;
-    }
-
+    /**
+     * Gestion de l'affichage lors du retour sur le fragment
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -296,12 +290,48 @@ public class DepotFragment extends Fragment {
                 viewPager.setVisibility(View.VISIBLE);
             }
         }
-//        if (listCaracteristiques != null){
-//            if (listCaracteristiques.size() > 0){
-//                adapter.notifyDataSetChanged();
-//                setListViewHeightBasedOnChildren(listView);
-//            }
-//        }
+        if (listCaracteristiques != null) {
+            if (listCaracteristiques.size() > 0) {
+                adapter.notifyDataSetChanged();
+                Tool.setListViewHeightBasedOnChildren(listView);
+            }
+        }
+    }
+
+    /**
+     * Gestion de la sauvegarde du formulaire lorsque l'on pars du fragment
+     */
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        getFragmentManager().putFragment(outState, "SaveDepot", this);
+    }
+
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onFragmentInteraction(uri);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+
+        void onFragmentInteraction(Uri uri);
+
+    }
+
+    public ArrayList<String> getListCaracteristiques() {
+        return listCaracteristiques;
+    }
+
+    public ArrayList<String> getListPhoto() {
+        return listPhoto;
     }
 
 

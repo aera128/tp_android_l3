@@ -36,6 +36,9 @@ public class ViewPagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         ImageView imageView = new ImageView(context);
+        /**
+         * Vérification si l'image est en locale ou non
+         */
         if (imgUrls.get(position).contains(context.getCacheDir().toString())) {
             Picasso.get().load(new File(imgUrls.get(position))).resize(1000, 800).centerCrop().into(imageView);
         } else {

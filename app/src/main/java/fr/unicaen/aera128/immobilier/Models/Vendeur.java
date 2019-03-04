@@ -2,6 +2,9 @@ package fr.unicaen.aera128.immobilier.Models;
 
 import java.io.Serializable;
 
+/**
+ * Modèle d'un vendeur
+ */
 public class Vendeur implements Serializable {
     private String id;
     private String nom;
@@ -9,18 +12,9 @@ public class Vendeur implements Serializable {
     private String email;
     private String telephone;
 
-    public Vendeur(String id, String nom, String prenom, String email, String telephone) {
-        this.id = id;
-        this.nom = nom;
-        this.prenom = prenom;
-        this.email = email;
-        this.telephone = telephone;
-    }
-
-    public Vendeur() {
-
-    }
-
+    /**
+     * Getter Setters
+     */
     public String getId() {
         return id;
     }
@@ -61,7 +55,9 @@ public class Vendeur implements Serializable {
         this.telephone = telephone;
     }
 
-
+    /**
+     * Redéfinition du toString()
+     */
     @Override
     public String toString() {
         return prenom + " " + nom;

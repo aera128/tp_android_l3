@@ -58,7 +58,6 @@ public class ListFragment extends Fragment {
     private ProprietesAdapter mAdapter;
 
     public ListFragment() {
-        // Required empty public constructor
     }
 
     /**
@@ -90,9 +89,16 @@ public class ListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = (RecyclerView) getActivity().findViewById(R.id.listeBiens);
 
+        /**
+         * Déclaration de l'adapter d'affichage d'une propriété dans une liste et
+         * gestion du clic sur un item de la liste
+         */
         mAdapter = new ProprietesAdapter(proprietes, getContext(), new OnItemClickListener() {
             @Override
             public void onItemClick(Propriete item) {
+                /**
+                 * Envoi sur la visualisation de la propriété cliquée
+                 */
                 HasardFragment fr = HasardFragment.newInstance(item, 2);
                 FragmentManager fm = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fm.beginTransaction();
@@ -103,6 +109,9 @@ public class ListFragment extends Fragment {
             }
         });
 
+        /**
+         * Lien entre l'adapter et la recyclerview
+         */
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -150,6 +159,9 @@ public class ListFragment extends Fragment {
 
             @Override
             public void onFailure(Call call, IOException e) {
+                /**
+                 * Affichage d'une fenêtre de dialogue lors d'une erreur de requete okHttp
+                 */
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -186,8 +198,12 @@ public class ListFragment extends Fragment {
                             .build();
                     Type type = Types.newParameterizedType(List.class, Propriete.class);
                     jsonAdapter = moshi.adapter(type);
+                    /**
+                     * Récupération de la liste des propriétés
+                     */
                     proprietes = jsonAdapter.fromJson(jsonResponse.toString());
                     mAdapter.setProprietes(proprietes);
+
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

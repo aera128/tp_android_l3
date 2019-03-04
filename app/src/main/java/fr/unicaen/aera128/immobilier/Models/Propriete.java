@@ -3,6 +3,9 @@ package fr.unicaen.aera128.immobilier.Models;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Modele d'une propriété
+ */
 public class Propriete implements Serializable {
     private String id;
     private String titre;
@@ -17,6 +20,9 @@ public class Propriete implements Serializable {
     private long date;
     private List<String> comment;
 
+    /**
+     * Getters/Setters
+     */
     public String getId() {
         return id;
     }

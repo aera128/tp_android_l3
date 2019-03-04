@@ -32,6 +32,9 @@ public class AddVendeurFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private AnnonceDataSource annonceDB;
+    /**
+     * Composants de la vue
+     */
     private EditText editPrenom;
     private EditText editNom;
     private EditText editMail;
@@ -69,18 +72,30 @@ public class AddVendeurFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        /**
+         * Déclaration de la base de données
+         */
         annonceDB = new AnnonceDataSource(getActivity());
         annonceDB.open();
 
+        /**
+         * Assignation des composants de la vue
+         */
         editPrenom = getActivity().findViewById(R.id.editPrenom);
         editNom = getActivity().findViewById(R.id.editNom);
         editMail = getActivity().findViewById(R.id.editMail);
         editTel = getActivity().findViewById(R.id.editTel);
 
+        /**
+         * Gestion du bouton pour sauvegarder le vendeur
+         */
         btnSave = getActivity().findViewById(R.id.btnSaveVendeur);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /**
+                 * Gestion du formulaire
+                 */
                 if (isFormValid()) {
                     Vendeur vendeur = new Vendeur();
                     Random generator = new Random();
@@ -90,14 +105,22 @@ public class AddVendeurFragment extends Fragment {
                     vendeur.setNom(editNom.getText().toString());
                     vendeur.setEmail(editMail.getText().toString());
                     vendeur.setTelephone(editTel.getText().toString());
-
+                    /**
+                     * Insertion du vendeur dans la base de données
+                     */
                     if (annonceDB.insertVendeur(vendeur)) {
                         Toast toast = Toast.makeText(getContext(), "Vendeur inséré", Toast.LENGTH_SHORT);
                         toast.show();
                         FragmentManager fm = getFragmentManager();
                         if (fm.getBackStackEntryCount() > 0) {
+                            /**
+                             * Retour vers le formulaire de dépot d'une propriété
+                             */
                             fm.popBackStack();
                         } else {
+                            /**
+                             * Retour vers le menu principal s'il n'y a pas de retour entre fragments
+                             */
                             MainFragment fr = MainFragment.newInstance();
                             FragmentTransaction fragmentTransaction = fm.beginTransaction();
                             fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
@@ -117,6 +140,9 @@ public class AddVendeurFragment extends Fragment {
 
     }
 
+    /**
+     * Vérification du formulaire
+     */
     private boolean isFormValid() {
         if (editPrenom.getText().toString() == "") return false;
         if (editNom.getText().toString() == "") return false;
