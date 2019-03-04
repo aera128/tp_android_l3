@@ -1,8 +1,11 @@
 package fr.unicaen.aera128.immobilier.Fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -70,6 +73,10 @@ public class HasardFragment extends Fragment {
     private ArrayAdapter<String> adapterComment;
     private Button btnAddComment;
     private ArrayList<String> localListComment;
+    private ArrayList<String> localListPhoto;
+    private Button btnPhotoSaved;
+    private int REQUEST_TAKE_PHOTO;
+    private ViewPagerAdapter adapterImage;
 
     public HasardFragment() {
         // Required empty public constructor
@@ -164,6 +171,18 @@ public class HasardFragment extends Fragment {
                     }
                 }
             });
+
+            btnPhotoSaved = getActivity().findViewById(R.id.btnPhotoSaved);
+            btnPhotoSaved.setVisibility(View.VISIBLE);
+            btnPhotoSaved.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent photoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    if (photoIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                        startActivityForResult(photoIntent, REQUEST_TAKE_PHOTO);
+                    }
+                }
+            });
         } else {
             btnDel.setVisibility(View.GONE);
             btnSave.setOnClickListener(new View.OnClickListener() {
@@ -225,8 +244,9 @@ public class HasardFragment extends Fragment {
         titre.setText(propriete.getTitre());
 
         ViewPager viewPager = getActivity().findViewById(R.id.carousel);
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getContext(), propriete.getImages());
-        viewPager.setAdapter(adapter);
+        localListPhoto = new ArrayList<String>(propriete.getImages());
+        adapterImage = new ViewPagerAdapter(getContext(), localListPhoto);
+        viewPager.setAdapter(adapterImage);
 
         TextView prix = getActivity().findViewById(R.id.prixVisio);
         prix.setText(propriete.getPrix() + " €");
@@ -298,5 +318,19 @@ public class HasardFragment extends Fragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Bundle extras = data.getExtras();
+        try {
+            Bitmap imgTmp = (Bitmap) extras.get("data");
+            localListPhoto.add(Tool.saveImage(imgTmp, getContext()));
+            propriete.setImages(localListPhoto);
+            annonceDB.updatePropriete(propriete);
+            adapterImage.notifyDataSetChanged();
+        } catch (Exception e) {
+        }
     }
 }

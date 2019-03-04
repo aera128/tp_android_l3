@@ -88,6 +88,7 @@ public class AnnonceDataSource {
         Cursor c = database.rawQuery("SELECT * FROM " + AnnonceSQLiteHelper.TABLE_PROPRIETES + " WHERE " + AnnonceSQLiteHelper.COLUMN_ID + "=\"" + propriete.getId() + "\"", null);
         if (c.getCount() != 0) {
             ContentValues values = new ContentValues();
+            values.put(AnnonceSQLiteHelper.COLUMN_IMAGES, Tool.convertArrayToString(propriete.getImages()));
             values.put(AnnonceSQLiteHelper.COLUMN_COMMENT, Tool.convertArrayToString(propriete.getComment()));
             database.update(AnnonceSQLiteHelper.TABLE_PROPRIETES, values, AnnonceSQLiteHelper.COLUMN_ID + " = " + propriete.getId(), null);
             Log.w(AnnonceDataSource.class.getName(), "Propriete mis à jour");
