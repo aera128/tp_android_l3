@@ -57,12 +57,12 @@ import okhttp3.ResponseBody;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link HasardFragment.OnFragmentInteractionListener} interface
+ * {@link DetailFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link HasardFragment#newInstance} factory method to
+ * Use the {@link DetailFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HasardFragment extends Fragment {
+public class DetailFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -109,15 +109,15 @@ public class HasardFragment extends Fragment {
 
     private int REQUEST_TAKE_PHOTO;
 
-    public HasardFragment() {
+    public DetailFragment() {
     }
 
 
     /**
      * @return une nouvelle instance d'un fragment avec une propriété
      */
-    public static HasardFragment newInstance(Propriete p, int modeFragmentHasard) {
-        HasardFragment fragment = new HasardFragment();
+    public static DetailFragment newInstance(Propriete p, int modeFragmentHasard) {
+        DetailFragment fragment = new DetailFragment();
         /**
          * Gestion des paramètres
          */
@@ -131,8 +131,8 @@ public class HasardFragment extends Fragment {
     /**
      * @return une nouvelle instance d'un fragment
      */
-    public static HasardFragment newInstance() {
-        HasardFragment fragment = new HasardFragment();
+    public static DetailFragment newInstance() {
+        DetailFragment fragment = new DetailFragment();
         return fragment;
     }
 
@@ -150,7 +150,7 @@ public class HasardFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_hasard, container, false);
+        return inflater.inflate(R.layout.fragment_detail, container, false);
     }
 
     @SuppressLint("RestrictedApi")
@@ -438,14 +438,16 @@ public class HasardFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Bundle extras = data.getExtras();
-        try {
-            Bitmap imgTmp = (Bitmap) extras.get("data");
-            localListPhoto.add(Tool.saveImage(imgTmp, getContext()));
-            propriete.setImages(localListPhoto);
-            annonceDB.updatePropriete(propriete);
-            adapterImage.notifyDataSetChanged();
-        } catch (Exception e) {
+        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == getActivity().RESULT_OK) {
+            Bundle extras = data.getExtras();
+            try {
+                Bitmap imgTmp = (Bitmap) extras.get("data");
+                localListPhoto.add(Tool.saveImage(imgTmp, getContext()));
+                propriete.setImages(localListPhoto);
+                annonceDB.updatePropriete(propriete);
+                adapterImage.notifyDataSetChanged();
+            } catch (Exception e) {
+            }
         }
     }
 

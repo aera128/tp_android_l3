@@ -13,7 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import fr.unicaen.aera128.immobilier.Fragments.DepotFragment;
-import fr.unicaen.aera128.immobilier.Fragments.HasardFragment;
+import fr.unicaen.aera128.immobilier.Fragments.DetailFragment;
 import fr.unicaen.aera128.immobilier.Fragments.ListFragment;
 import fr.unicaen.aera128.immobilier.Fragments.MainFragment;
 import fr.unicaen.aera128.immobilier.Fragments.SavedFragment;
@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showHasardFragment() {
-        if (this.fragmentHasard == null) this.fragmentHasard = HasardFragment.newInstance();
+        if (this.fragmentHasard == null) this.fragmentHasard = DetailFragment.newInstance();
         this.startTransactionFragment(this.fragmentHasard);
     }
 

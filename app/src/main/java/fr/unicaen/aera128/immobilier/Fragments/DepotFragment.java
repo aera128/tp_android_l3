@@ -229,7 +229,7 @@ public class DepotFragment extends Fragment {
                     propriete.setImages(listPhoto);
                     propriete.setDate(System.currentTimeMillis());
 
-                    HasardFragment fr = HasardFragment.newInstance(propriete, 2);
+                    DetailFragment fr = DetailFragment.newInstance(propriete, 2);
                     FragmentManager fm = getFragmentManager();
                     FragmentTransaction fragmentTransaction = fm.beginTransaction();
                     fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
@@ -267,15 +267,17 @@ public class DepotFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Bundle extras = data.getExtras();
-        try {
-            Bitmap imgTmp = (Bitmap) extras.get("data");
-            listPhoto.add(Tool.saveImage(imgTmp, getContext()));
-            if (listPhoto.size() > 0) {
-                viewPager.setVisibility(View.VISIBLE);
+        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == getActivity().RESULT_OK) {
+            Bundle extras = data.getExtras();
+            try {
+                Bitmap imgTmp = (Bitmap) extras.get("data");
+                listPhoto.add(Tool.saveImage(imgTmp, getContext()));
+                if (listPhoto.size() > 0) {
+                    viewPager.setVisibility(View.VISIBLE);
+                }
+                adapterPhoto.notifyDataSetChanged();
+            } catch (Exception e) {
             }
-            adapterPhoto.notifyDataSetChanged();
-        } catch (Exception e) {
         }
     }
 
@@ -333,6 +335,4 @@ public class DepotFragment extends Fragment {
     public ArrayList<String> getListPhoto() {
         return listPhoto;
     }
-
-
 }

@@ -99,7 +99,7 @@ public class SavedFragment extends Fragment {
                 /**
                  * Envoi sur la visualisation de la propriété cliquée
                  */
-                HasardFragment fr = HasardFragment.newInstance(item, 1);
+                DetailFragment fr = DetailFragment.newInstance(item, 1);
                 FragmentManager fm = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fm.beginTransaction();
                 fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
