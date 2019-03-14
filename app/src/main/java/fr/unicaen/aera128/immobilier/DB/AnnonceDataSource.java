@@ -85,6 +85,12 @@ public class AnnonceDataSource {
             String imgTmp = Tool.convertArrayToString(propriete.getImages());
             values.put(AnnonceSQLiteHelper.COLUMN_IMAGES, imgTmp);
             values.put(AnnonceSQLiteHelper.COLUMN_DATE, propriete.getDate());
+            if (propriete.getComment() != null) {
+                values.put(AnnonceSQLiteHelper.COLUMN_COMMENT, Tool.convertArrayToString(propriete.getComment()));
+            } else {
+                values.put(AnnonceSQLiteHelper.COLUMN_COMMENT, "");
+            }
+
             /**
              * Insertion dans la base de données
              */
